@@ -1,7 +1,17 @@
 {
   "appName": "Rasial Helper",
   "description": "Safe Alt1 companion overlay for setup validation, calibration and bilingual Rasial study without gameplay automation.",
+  "appUrl": "./index.html",
+  "version": "0.1.0",
+  "configUrl": "./appconfig.json",
+  "iconUrl": "./icon.svg",
   "defaultWidth": 1280,
   "defaultHeight": 960,
-  "permissions": ["overlay", "pixel"]
+  "minWidth": 320,
+  "minHeight": 320,
+  "maxWidth": 1600,
+  "maxHeight": 1200,
+  "requestHandlers": [],
+  "activators": [],
+  "permissions": "pixel,overlay"
 }
