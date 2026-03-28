@@ -221,12 +221,16 @@ export function scanTrackerProfile(
   preference: LanguagePreference,
   overrides: Record<string, Partial<NormalizedRect>>,
   samples: Record<string, string>,
-  templates: TrackerIconTemplateMap = {}
+  templates: TrackerIconTemplateMap = {},
+  targetRegionIds?: string[]
 ): TrackerScanReport {
   const profile = getTrackerProfile(profileId);
   const values: Record<string, TrackerValue> = {};
+  const activeRegions = targetRegionIds?.length
+    ? profile.regions.filter((region) => targetRegionIds.includes(region.id))
+    : profile.regions;
 
-  const regions = profile.regions.map((region) => {
+  const regions = activeRegions.map((region) => {
     const rect = resolveRect(region.defaultRect, overrides[region.id]);
     const fallbackText = samples[region.id]?.trim() ?? "";
     let rawText = fallbackText;

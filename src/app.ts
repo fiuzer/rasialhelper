@@ -42,6 +42,15 @@ import type { LanguagePreference } from "./types/languages";
 import { resolveRect } from "./visual/detector";
 import { getVisualProfile } from "./visual/profiles";
 
+const liveTrackerConfig = {
+  enabled: false,
+  intervalMs: 750,
+  timerId: undefined as number | undefined
+};
+
+let liveState: AppState | undefined;
+let liveRoot: HTMLElement | undefined;
+
 function optionMarkup(value: string, label: string, selected: string): string {
   return `<option value="${value}" ${value === selected ? "selected" : ""}>${label}</option>`;
 }
@@ -162,6 +171,12 @@ function renderTrackerMini(state: AppState, i18n: I18n): string {
     .join("");
 }
 
+function renderLiveTrackerIntervalOptions(selected: number): string {
+  return [250, 500, 750, 1000, 1500]
+    .map((value) => optionMarkup(String(value), `${value}ms`, String(selected)))
+    .join("");
+}
+
 function renderTrackedValueList(region: (typeof getTrackerProfile extends (...args: any[]) => infer R ? R : never)["regions"][number], i18n: I18n): string {
   const ids = region.slotAssignments?.length ? region.slotAssignments : region.trackerIds;
   return ids
@@ -260,6 +275,8 @@ function renderTrackerAdvanced(state: AppState, i18n: I18n): string {
 }
 
 function render(state: AppState, root: HTMLElement): void {
+  liveState = state;
+  liveRoot = root;
   const i18n = new I18n(state.resolvedAppLanguage);
   const timelineEvent = state.timelineIndex >= 0 ? studyTimeline[state.timelineIndex] : undefined;
   const setupReport = getSetupReport(state);
@@ -291,6 +308,10 @@ function render(state: AppState, root: HTMLElement): void {
               <h2>${i18n.t("tracker.title")}</h2>
               <div class="row">
                 <button id="scan-tracker-profile">${i18n.t("tracker.scanAll")}</button>
+                <button id="toggle-live-tracker">${i18n.t(
+                  liveTrackerConfig.enabled ? "tracker.liveStop" : "tracker.liveStart"
+                )}</button>
+                <select id="live-tracker-interval">${renderLiveTrackerIntervalOptions(liveTrackerConfig.intervalMs)}</select>
                 <button id="capture-tracker-templates">${i18n.t("tracker.captureTemplates")}</button>
                 <button id="clear-tracker-templates">${i18n.t("tracker.clearTemplates")}</button>
                 <button id="reset-tracker-profile">${i18n.t("tracker.reset")}</button>
@@ -299,6 +320,9 @@ function render(state: AppState, root: HTMLElement): void {
             <div class="summary-line">
               <span>${i18n.t(trackerProfile.supportedModeKey)}</span>
               <span>${i18n.t("tracker.templatesSummary")}: ${Object.keys(state.trackerIconTemplates).length}</span>
+              <span>${i18n.t("tracker.liveStatus")}: ${i18n.t(
+                liveTrackerConfig.enabled ? "tracker.liveRunning" : "tracker.liveStopped"
+              )}</span>
             </div>
             <div class="metric-grid">
               ${renderTrackerMini(state, i18n)}
@@ -469,6 +493,8 @@ function render(state: AppState, root: HTMLElement): void {
   const trackerProfileSelect = root.querySelector<HTMLSelectElement>("#tracker-profile-select");
   const applyTrackerProfileButton = root.querySelector<HTMLButtonElement>("#apply-tracker-profile");
   const scanTrackerProfileButton = root.querySelector<HTMLButtonElement>("#scan-tracker-profile");
+  const toggleLiveTrackerButton = root.querySelector<HTMLButtonElement>("#toggle-live-tracker");
+  const liveTrackerIntervalSelect = root.querySelector<HTMLSelectElement>("#live-tracker-interval");
   const captureTrackerTemplatesButton = root.querySelector<HTMLButtonElement>("#capture-tracker-templates");
   const clearTrackerTemplatesButton = root.querySelector<HTMLButtonElement>("#clear-tracker-templates");
   const resetTrackerProfileButton = root.querySelector<HTMLButtonElement>("#reset-tracker-profile");
@@ -574,6 +600,19 @@ function render(state: AppState, root: HTMLElement): void {
   scanTrackerProfileButton?.addEventListener("click", () => {
     syncTrackerInputs();
     state = runTrackerScan(state, createAlt1PixelSource());
+    render(state, root);
+  });
+
+  toggleLiveTrackerButton?.addEventListener("click", () => {
+    liveTrackerConfig.enabled = !liveTrackerConfig.enabled;
+    if (liveTrackerIntervalSelect?.value) {
+      liveTrackerConfig.intervalMs = Number(liveTrackerIntervalSelect.value);
+    }
+    render(state, root);
+  });
+
+  liveTrackerIntervalSelect?.addEventListener("change", () => {
+    liveTrackerConfig.intervalMs = Number(liveTrackerIntervalSelect.value);
     render(state, root);
   });
 
@@ -736,9 +775,43 @@ function render(state: AppState, root: HTMLElement): void {
     state = { ...state, lastMatch: undefined };
     render(state, root);
   });
+
+  syncLiveTrackerLoop();
 }
 
 export function bootstrap(root: HTMLElement): void {
   const state = createInitialState(window.localStorage, navigator.language);
   render(state, root);
+}
+
+function stopLiveTrackerLoop(): void {
+  if (liveTrackerConfig.timerId !== undefined) {
+    window.clearInterval(liveTrackerConfig.timerId);
+    liveTrackerConfig.timerId = undefined;
+  }
+}
+
+function syncLiveTrackerLoop(): void {
+  if (!liveTrackerConfig.enabled) {
+    stopLiveTrackerLoop();
+    return;
+  }
+
+  stopLiveTrackerLoop();
+  liveTrackerConfig.timerId = window.setInterval(() => {
+    if (!liveState || !liveRoot) {
+      return;
+    }
+
+    const source = createAlt1PixelSource();
+    if (!source?.isReady()) {
+      return;
+    }
+
+    liveState = runTrackerScan(liveState, source, {
+      silent: true,
+      targetRegionIds: ["buff-bar"]
+    });
+    render(liveState, liveRoot);
+  }, liveTrackerConfig.intervalMs);
 }

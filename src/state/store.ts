@@ -354,28 +354,60 @@ export function resetTrackerCalibration(state: AppState): AppState {
 
 export function runTrackerScan(
   state: AppState,
-  source: PixelSource | undefined
+  source: PixelSource | undefined,
+  options?: {
+    silent?: boolean;
+    targetRegionIds?: string[];
+  }
 ): AppState {
+  const profile = getTrackerProfile(state.selectedTrackerProfileId);
   const report = scanTrackerProfile(
     source,
     state.selectedTrackerProfileId,
     state.settings.gameLanguage,
     state.trackerRegionOverrides,
     state.trackerSamples,
-    state.trackerIconTemplates
+    state.trackerIconTemplates,
+    options?.targetRegionIds
   );
+
+  const nextTrackerResults = options?.targetRegionIds?.length
+    ? {
+        ...state.trackerResults,
+        ...Object.fromEntries(report.regions.map((region) => [region.regionId, region]))
+      }
+    : Object.fromEntries(report.regions.map((region) => [region.regionId, region]));
+
+  const nextTrackerValues = { ...state.trackerValues };
+  if (options?.targetRegionIds?.length) {
+    const affectedTrackerIds = profile.regions
+      .filter((region) => options.targetRegionIds?.includes(region.id))
+      .flatMap((region) => [...region.trackerIds, ...(region.slotAssignments ?? [])]);
+
+    for (const trackerId of affectedTrackerIds) {
+      delete nextTrackerValues[trackerId];
+    }
+  } else {
+    for (const key of Object.keys(nextTrackerValues)) {
+      delete nextTrackerValues[key];
+    }
+  }
+
+  Object.assign(nextTrackerValues, report.values);
 
   return {
     ...state,
-    trackerResults: Object.fromEntries(report.regions.map((region) => [region.regionId, region])),
-    trackerValues: report.values,
-    diagnostics: [
-      {
-        timestamp: new Date().toISOString(),
-        message: Object.keys(report.values).length ? "tracker-scan-complete" : "tracker-scan-empty"
-      },
-      ...state.diagnostics
-    ]
+    trackerResults: nextTrackerResults,
+    trackerValues: nextTrackerValues,
+    diagnostics: options?.silent
+      ? state.diagnostics
+      : [
+          {
+            timestamp: new Date().toISOString(),
+            message: Object.keys(report.values).length ? "tracker-scan-complete" : "tracker-scan-empty"
+          },
+          ...state.diagnostics
+        ]
   };
 }
 
