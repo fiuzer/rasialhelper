@@ -56,6 +56,43 @@ The project is structured as an Alt1-style web app. The simplest flow is:
 
 The app also exposes [public/appconfig.json](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/public/appconfig.json) so you can keep packaging aligned with an app-style setup.
 
+## Hosting 24/7
+
+### GitHub Pages
+
+The repository now includes [deploy-pages.yml](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/.github/workflows/deploy-pages.yml), which deploys automatically on every push to `main`.
+
+Recommended steps:
+
+1. Push the repository to GitHub.
+2. In GitHub, open `Settings > Pages`.
+3. Set the source to `GitHub Actions`.
+4. Push to `main` and wait for the workflow to finish.
+5. Your app will be published at a URL like:
+
+```text
+https://YOUR-USER.github.io/YOUR-REPO/
+```
+
+Your public Alt1 app config will be available at:
+
+```text
+https://YOUR-USER.github.io/YOUR-REPO/appconfig.json
+```
+
+Because the Vite base is configured with relative assets, the same build works both locally and on GitHub Pages.
+
+### Cloudflare Pages
+
+This project is also compatible with static hosting on Cloudflare Pages.
+
+Suggested settings:
+
+- Build command: `npm run build`
+- Build output directory: `dist`
+
+That gives you a permanently hosted static URL without changing the app code.
+
 ## Core screens
 
 ### Official / Alt1 mode
