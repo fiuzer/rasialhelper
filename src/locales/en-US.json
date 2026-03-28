@@ -1,0 +1,235 @@
+{
+  "app": {
+    "title": "Rasial Helper",
+    "subtitle": "A safe Alt1 study companion for setup validation, callouts, calibration and bilingual diagnostics.",
+    "disclaimer": "This project is a passive helper only. It does not automate gameplay or send inputs."
+  },
+  "language": {
+    "label": "Language",
+    "auto": "Automatic",
+    "pt-BR": "Portuguese (Brazil)",
+    "en-US": "English (US)"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "App language and game language are independent so the helper remains usable in mixed-language setups.",
+    "appLanguage": "App language",
+    "gameLanguage": "Game language",
+    "forceRecognition": "Force selected game language for recognition",
+    "forceRecognitionHelp": "Use the selected game language even when the auto detector is uncertain.",
+    "save": "Save settings",
+    "saved": "Settings saved",
+    "storageError": "Could not save settings"
+  },
+  "dashboard": {
+    "title": "Encounter Overview",
+    "overview": "Current helper state",
+    "status": "Recognition status",
+    "appLanguage": "Resolved app language",
+    "gameLanguage": "Resolved game language",
+    "manualModeHelp": "Use this when you want callouts and timelines without depending on OCR.",
+    "simulateEnglish": "Run English sample",
+    "simulatePortuguese": "Run Portuguese sample",
+    "reset": "Reset session",
+    "confidence": "Confidence",
+    "healthy": "Healthy",
+    "uncertain": "Uncertain"
+  },
+  "official": {
+    "title": "Alt1 App Mode",
+    "browserPreview": "Running in browser preview",
+    "connected": "Connected to Alt1",
+    "description": "Use the app as an Alt1 web app with explicit permissions and a visible address bar during setup.",
+    "devUrl": "Development URL",
+    "buildUrl": "Production build",
+    "step1": "Open this URL inside an Alt1 window.",
+    "step2": "Enable run as app and grant Overlay permission.",
+    "step3": "Keep Screen pixels disabled until you actually need assisted calibration.",
+    "step4": "Use the setup validator before a run and the coach during the fight."
+  },
+  "overlay": {
+    "title": "Overlay Preview",
+    "phase": "Phase",
+    "callout": "Recommended action",
+    "defensive": "Prepare defensive",
+    "burst": "Burst window",
+    "reposition": "Reposition to a safe lane",
+    "start": "Pull timer started",
+    "manualReminder": "Manual confirmation required"
+  },
+  "setup": {
+    "title": "Setup Validator",
+    "description": "Choose a study preset, paste setup notes if you have them, and confirm what is ready before the encounter.",
+    "presetLabel": "Preset",
+    "applyPreset": "Apply preset",
+    "sampleLabel": "Setup notes or OCR sample",
+    "samplePlaceholder": "overload, aura active, familiar summoned, food ready",
+    "sampleHint": "Detection is assistive only. Manual confirmation always wins.",
+    "analyze": "Analyze setup sample",
+    "clear": "Clear setup states",
+    "readiness": "Readiness score",
+    "requiredSummary": "Required items ready",
+    "detectedSummary": "Detected",
+    "manualSummary": "Manual",
+    "uncertainSummary": "Uncertain",
+    "allRequiredReady": "All required setup items are ready.",
+    "missingRequired": "Missing required item",
+    "missingRecommended": "Recommended item still not confirmed",
+    "status": "Status",
+    "requirement": "Requirement",
+    "source": "Validation modes",
+    "why": "Why it matters",
+    "nextAction": "Next action",
+    "category": "Category",
+    "reviewTitle": "Preset review",
+    "statusNames": {
+      "missing": "Missing",
+      "manual": "Manual confirmation",
+      "detected": "Detected",
+      "uncertain": "Uncertain"
+    },
+    "requirementNames": {
+      "required": "Required",
+      "recommended": "Recommended",
+      "optional": "Optional"
+    },
+    "categoryNames": {
+      "buffs": "Buffs",
+      "survival": "Survival",
+      "preparation": "Preparation",
+      "offense": "Offense"
+    },
+    "detectionModes": {
+      "manual": "Manual",
+      "visual": "Visual",
+      "textual": "Text",
+      "inferred": "Inferred"
+    },
+    "presets": {
+      "safeLearning": {
+        "title": "Safe learning",
+        "description": "Prioritizes survival checks and basic damage support."
+      },
+      "balancedFarm": {
+        "title": "Balanced farm",
+        "description": "Adds more throughput tools while keeping a full safety baseline."
+      },
+      "minimalCheck": {
+        "title": "Minimal check",
+        "description": "Fast pre-fight validation for repeated runs."
+      }
+    },
+    "items": {
+      "offensivePotion": {
+        "title": "Offensive potion active",
+        "summary": "Main combat potion or equivalent damage buff is prepared.",
+        "why": "A missing potion usually lowers damage for the entire fight instead of just one mechanic.",
+        "fix": "Refresh the potion before the pull and confirm the timer manually if needed."
+      },
+      "combatAura": {
+        "title": "Combat aura enabled",
+        "summary": "Aura or similar long-duration buff is active.",
+        "why": "Auras are easy to forget and have a high opportunity cost if the run starts without them.",
+        "fix": "Check the aura slot before entering and switch presets if you are conserving charges."
+      },
+      "familiar": {
+        "title": "Familiar active",
+        "summary": "Your familiar or summon support is already active.",
+        "why": "This affects consistency across long sessions and is commonly forgotten between deaths or banking.",
+        "fix": "Re-summon before the pull and confirm inventory support items are still present."
+      },
+      "pocketSlot": {
+        "title": "Pocket slot prepared",
+        "summary": "Pocket item, scripture or similar long-duration slot is ready.",
+        "why": "Pocket slots are a free source of value when your preset expects them.",
+        "fix": "Equip or activate the pocket item and downgrade the preset if you are intentionally skipping it."
+      },
+      "protectionPrayer": {
+        "title": "Protection prayer plan",
+        "summary": "Protection prayer, curses or equivalent defense stance is prepared.",
+        "why": "Survival planning is the highest-value part of a study run because it keeps mechanics visible longer.",
+        "fix": "Set the correct prayer before the pull and rehearse the swap timing in coach mode."
+      },
+      "emergencyHealing": {
+        "title": "Emergency healing ready",
+        "summary": "Food, brews or other emergency recovery tools are available.",
+        "why": "Learning attempts collapse quickly when recovery tools are missing, even if your rotation is correct.",
+        "fix": "Restock healing and keep one panic response mapped in your plan."
+      },
+      "weaponCharges": {
+        "title": "Charges and durability checked",
+        "summary": "Weapons, armor and other gear upkeep were reviewed before starting.",
+        "why": "This avoids losing runs to preventable upkeep mistakes that have nothing to do with decision-making.",
+        "fix": "Repair or recharge before committing to a study block."
+      },
+      "conjureOpener": {
+        "title": "Opener resources prepared",
+        "summary": "Your opening summon or burst setup is ready.",
+        "why": "A clean opener makes it easier to compare one run to another when you are studying improvements.",
+        "fix": "Rehearse the opener in coach mode and only mark this as ready when the sequence is intentional."
+      },
+      "defensivePlan": {
+        "title": "Defensive plan prepared",
+        "summary": "You already know which defensive tools you will spend on the first dangerous moments.",
+        "why": "A plan matters more than reflexes during learning, because it reduces panic decisions.",
+        "fix": "Write down the first two defensive responses and keep them visible in the overlay."
+      },
+      "extraBoost": {
+        "title": "Optional extra boost",
+        "summary": "Minor optional boosts are active if this preset expects them.",
+        "why": "These boosts matter less than survival, but they are worth tracking when you compare setups.",
+        "fix": "Only chase this after required and recommended items are already stable."
+      }
+    }
+  },
+  "coach": {
+    "title": "Fight Coach",
+    "description": "Step through a study timeline with language-independent mechanics and localized explanations.",
+    "start": "Start run",
+    "next": "Next event",
+    "restart": "Restart timeline",
+    "empty": "No event active yet",
+    "timeline": "Timeline",
+    "recommended": "Recommendation",
+    "phaseMarker": "Phase marker"
+  },
+  "calibration": {
+    "title": "Calibration Assistant",
+    "description": "Paste or type a sample OCR string to validate aliases, matching tolerance and language assumptions.",
+    "sampleLabel": "Sample OCR text",
+    "regionLabel": "Expected region",
+    "run": "Validate sample",
+    "clear": "Clear",
+    "result": "Calibration result",
+    "match": "Best match",
+    "detectedLanguage": "Detected game language",
+    "selectedLanguage": "Selected game language",
+    "mismatch": "Selected language does not match the strongest profile.",
+    "uncertain": "The reading is uncertain. Prefer icon, color and position-based checks.",
+    "pass": "Calibration looks consistent.",
+    "regionBoss": "Boss name",
+    "regionPhase": "Phase text",
+    "regionHazard": "Hazard warning",
+    "regionAction": "Action prompt"
+  },
+  "diagnostics": {
+    "title": "History and Diagnostics",
+    "description": "Recent decisions, recognition notes and fallback behavior are listed here.",
+    "clear": "Clear history",
+    "empty": "No diagnostics yet",
+    "presetApplied": "Preset applied",
+    "setupAnalyzed": "Setup sample analyzed",
+    "setupNoMatch": "Setup sample did not match known aliases",
+    "setupCleared": "Setup states cleared"
+  },
+  "help": {
+    "title": "Help",
+    "mixedLanguage": "You can keep the app in one language and the game in another.",
+    "manualCalibration": "If OCR is unreliable, save a manual game-language profile and continue using timers and callouts.",
+    "newLanguage": "Add a new locale JSON file and a new recognition profile to extend the app."
+  },
+  "errors": {
+    "missingTranslation": "Missing translation key",
+    "invalidSample": "Enter at least one sample text."
+  }
+}

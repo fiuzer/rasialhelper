@@ -1,0 +1,235 @@
+{
+  "app": {
+    "title": "Rasial Helper",
+    "subtitle": "Um companion seguro para Alt1 com validação de setup, callouts, calibração e diagnósticos bilíngues.",
+    "disclaimer": "Este projeto é apenas um helper passivo. Ele não automatiza gameplay nem envia inputs."
+  },
+  "language": {
+    "label": "Idioma",
+    "auto": "Automático",
+    "pt-BR": "Português (Brasil)",
+    "en-US": "Inglês (EUA)"
+  },
+  "settings": {
+    "title": "Configurações",
+    "description": "O idioma do app e o idioma do jogo são independentes para manter o helper útil em combinações mistas.",
+    "appLanguage": "Idioma do app",
+    "gameLanguage": "Idioma do jogo",
+    "forceRecognition": "Forçar idioma do jogo selecionado no reconhecimento",
+    "forceRecognitionHelp": "Usa o idioma do jogo escolhido mesmo quando o detector automático estiver incerto.",
+    "save": "Salvar configurações",
+    "saved": "Configurações salvas",
+    "storageError": "Não foi possível salvar as configurações"
+  },
+  "dashboard": {
+    "title": "Visão Geral do Encontro",
+    "overview": "Estado atual do helper",
+    "status": "Status do reconhecimento",
+    "appLanguage": "Idioma resolvido do app",
+    "gameLanguage": "Idioma resolvido do jogo",
+    "manualModeHelp": "Use isto quando quiser callouts e timeline sem depender de OCR.",
+    "simulateEnglish": "Rodar exemplo em inglês",
+    "simulatePortuguese": "Rodar exemplo em português",
+    "reset": "Resetar sessão",
+    "confidence": "Confiança",
+    "healthy": "Saudável",
+    "uncertain": "Incerto"
+  },
+  "official": {
+    "title": "Modo App Alt1",
+    "browserPreview": "Rodando em preview no navegador",
+    "connected": "Conectado ao Alt1",
+    "description": "Use o app como uma web app do Alt1 com permissões explícitas e barra de endereço visível durante a configuração.",
+    "devUrl": "URL de desenvolvimento",
+    "buildUrl": "Build de produção",
+    "step1": "Abra esta URL dentro de uma janela do Alt1.",
+    "step2": "Ative run as app e conceda a permissão Overlay.",
+    "step3": "Mantenha Screen pixels desativado até realmente precisar de calibração assistida.",
+    "step4": "Use o validador de setup antes da luta e o coach durante o combate."
+  },
+  "overlay": {
+    "title": "Prévia do Overlay",
+    "phase": "Fase",
+    "callout": "Ação recomendada",
+    "defensive": "Prepare defensivo",
+    "burst": "Janela de burst",
+    "reposition": "Reposicione para uma rota segura",
+    "start": "Timer da luta iniciado",
+    "manualReminder": "Confirmação manual necessária"
+  },
+  "setup": {
+    "title": "Validador de Setup",
+    "description": "Escolha um preset de estudo, cole notas de setup se tiver e confirme o que está pronto antes do encontro.",
+    "presetLabel": "Preset",
+    "applyPreset": "Aplicar preset",
+    "sampleLabel": "Notas do setup ou amostra OCR",
+    "samplePlaceholder": "overload, aura ativa, familiar invocado, cura pronta",
+    "sampleHint": "A detecção é apenas assistiva. A confirmação manual sempre prevalece.",
+    "analyze": "Analisar amostra do setup",
+    "clear": "Limpar estados do setup",
+    "readiness": "Pontuação de prontidão",
+    "requiredSummary": "Itens obrigatórios prontos",
+    "detectedSummary": "Detectado",
+    "manualSummary": "Manual",
+    "uncertainSummary": "Incerto",
+    "allRequiredReady": "Todos os itens obrigatórios do setup estão prontos.",
+    "missingRequired": "Item obrigatório faltando",
+    "missingRecommended": "Item recomendado ainda não confirmado",
+    "status": "Status",
+    "requirement": "Obrigatoriedade",
+    "source": "Modos de validação",
+    "why": "Por que isso importa",
+    "nextAction": "Próxima ação",
+    "category": "Categoria",
+    "reviewTitle": "Revisão do preset",
+    "statusNames": {
+      "missing": "Faltando",
+      "manual": "Confirmação manual",
+      "detected": "Detectado",
+      "uncertain": "Incerto"
+    },
+    "requirementNames": {
+      "required": "Obrigatório",
+      "recommended": "Recomendado",
+      "optional": "Opcional"
+    },
+    "categoryNames": {
+      "buffs": "Buffs",
+      "survival": "Sobrevivência",
+      "preparation": "Preparação",
+      "offense": "Ofensiva"
+    },
+    "detectionModes": {
+      "manual": "Manual",
+      "visual": "Visual",
+      "textual": "Texto",
+      "inferred": "Inferido"
+    },
+    "presets": {
+      "safeLearning": {
+        "title": "Aprendizado seguro",
+        "description": "Prioriza checagens de sobrevivência e suporte básico de dano."
+      },
+      "balancedFarm": {
+        "title": "Farm balanceado",
+        "description": "Adiciona mais ferramentas de dano mantendo uma base completa de segurança."
+      },
+      "minimalCheck": {
+        "title": "Checagem mínima",
+        "description": "Validação rápida antes da luta para execuções repetidas."
+      }
+    },
+    "items": {
+      "offensivePotion": {
+        "title": "Poção ofensiva ativa",
+        "summary": "A poção principal de combate ou buff equivalente de dano está preparada.",
+        "why": "Uma poção esquecida costuma reduzir o dano da luta inteira, não só de uma mecânica.",
+        "fix": "Renove a poção antes do pull e confirme o timer manualmente se necessário."
+      },
+      "combatAura": {
+        "title": "Aura de combate ligada",
+        "summary": "Aura ou buff longo equivalente está ativo.",
+        "why": "Auras são fáceis de esquecer e têm alto custo de oportunidade quando a tentativa começa sem elas.",
+        "fix": "Cheque o slot de aura antes de entrar e troque o preset se estiver economizando cargas."
+      },
+      "familiar": {
+        "title": "Familiar ativo",
+        "summary": "Seu familiar ou suporte de invocação já está ativo.",
+        "why": "Isso afeta a consistência ao longo de várias tentativas e costuma ser esquecido entre mortes ou banco.",
+        "fix": "Invoque novamente antes do pull e confirme se os itens de suporte ainda estão no inventário."
+      },
+      "pocketSlot": {
+        "title": "Pocket slot preparado",
+        "summary": "Item de bolso, escritura ou slot de efeito longo está pronto.",
+        "why": "Pocket slots entregam valor quase gratuito quando o preset espera esse recurso.",
+        "fix": "Equipe ou ative o item e reduza o preset se você estiver pulando isso de propósito."
+      },
+      "protectionPrayer": {
+        "title": "Plano de oração de proteção",
+        "summary": "Oração de proteção, curses ou postura defensiva equivalente está preparada.",
+        "why": "Planejamento de sobrevivência é a parte mais valiosa de uma tentativa de estudo porque mantém as mecânicas visíveis por mais tempo.",
+        "fix": "Defina a oração correta antes do pull e ensaie a troca no modo coach."
+      },
+      "emergencyHealing": {
+        "title": "Cura de emergência pronta",
+        "summary": "Comida, cura extra ou outras ferramentas de recuperação de emergência estão disponíveis.",
+        "why": "Tentativas de aprendizado quebram rápido quando a recuperação está ausente, mesmo com rotação correta.",
+        "fix": "Reabasteça a cura e mantenha uma resposta de pânico mapeada no seu plano."
+      },
+      "weaponCharges": {
+        "title": "Cargas e durabilidade verificadas",
+        "summary": "Armas, armadura e manutenção de equipamento foram revisadas antes de começar.",
+        "why": "Isso evita perder tentativas por erros de manutenção que não têm relação com tomada de decisão.",
+        "fix": "Repare ou recarregue antes de iniciar o bloco de estudo."
+      },
+      "conjureOpener": {
+        "title": "Recursos da abertura preparados",
+        "summary": "Sua abertura de summon ou burst está pronta.",
+        "why": "Uma abertura limpa facilita comparar uma tentativa com a outra durante o estudo.",
+        "fix": "Treine a abertura no modo coach e só marque como pronto quando a sequência estiver intencional."
+      },
+      "defensivePlan": {
+        "title": "Plano defensivo preparado",
+        "summary": "Você já sabe quais defensivos vai gastar nos primeiros momentos perigosos.",
+        "why": "Um plano vale mais que reflexo durante o aprendizado porque reduz decisões em pânico.",
+        "fix": "Escreva as duas primeiras respostas defensivas e mantenha isso visível no overlay."
+      },
+      "extraBoost": {
+        "title": "Boost extra opcional",
+        "summary": "Pequenos boosts opcionais estão ativos se este preset esperar por eles.",
+        "why": "Esses boosts importam menos que sobrevivência, mas valem a pena quando você compara setups.",
+        "fix": "Só persiga isso depois que os itens obrigatórios e recomendados estiverem estáveis."
+      }
+    }
+  },
+  "coach": {
+    "title": "Coach da Luta",
+    "description": "Avance por uma timeline de estudo com mecânicas independentes do idioma e explicações localizadas.",
+    "start": "Iniciar luta",
+    "next": "Próximo evento",
+    "restart": "Reiniciar timeline",
+    "empty": "Nenhum evento ativo ainda",
+    "timeline": "Timeline",
+    "recommended": "Recomendação",
+    "phaseMarker": "Marcador de fase"
+  },
+  "calibration": {
+    "title": "Assistente de Calibração",
+    "description": "Cole ou digite um texto de OCR de exemplo para validar aliases, tolerância de matching e hipótese de idioma.",
+    "sampleLabel": "Texto de OCR de exemplo",
+    "regionLabel": "Região esperada",
+    "run": "Validar exemplo",
+    "clear": "Limpar",
+    "result": "Resultado da calibração",
+    "match": "Melhor correspondência",
+    "detectedLanguage": "Idioma do jogo detectado",
+    "selectedLanguage": "Idioma do jogo selecionado",
+    "mismatch": "O idioma selecionado não bate com o perfil mais forte.",
+    "uncertain": "A leitura está incerta. Prefira checagens por ícone, cor e posição.",
+    "pass": "A calibração parece consistente.",
+    "regionBoss": "Nome do boss",
+    "regionPhase": "Texto de fase",
+    "regionHazard": "Aviso de hazard",
+    "regionAction": "Prompt de ação"
+  },
+  "diagnostics": {
+    "title": "Histórico e Diagnósticos",
+    "description": "Decisões recentes, notas de reconhecimento e comportamentos de fallback aparecem aqui.",
+    "clear": "Limpar histórico",
+    "empty": "Ainda não há diagnósticos",
+    "presetApplied": "Preset aplicado",
+    "setupAnalyzed": "Amostra de setup analisada",
+    "setupNoMatch": "A amostra de setup não correspondeu aos aliases conhecidos",
+    "setupCleared": "Estados do setup limpos"
+  },
+  "help": {
+    "title": "Ajuda",
+    "mixedLanguage": "Você pode manter o app em um idioma e o jogo em outro.",
+    "manualCalibration": "Se o OCR estiver instável, salve um perfil manual de idioma do jogo e continue usando timers e callouts.",
+    "newLanguage": "Adicione um novo arquivo de locale e um novo perfil de reconhecimento para expandir o app."
+  },
+  "errors": {
+    "missingTranslation": "Chave de tradução ausente",
+    "invalidSample": "Digite pelo menos um texto de exemplo."
+  }
+}
