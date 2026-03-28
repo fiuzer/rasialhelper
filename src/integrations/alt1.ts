@@ -161,6 +161,33 @@ export function createAlt1PixelSource(): PixelSource | undefined {
         hits,
         total: probe.points.length
       };
+    },
+    readSignature(rect: NormalizedRect, gridSize: number): number[] {
+      const alt = getAlt1();
+      if (!alt?.bindGetPixel) {
+        return [];
+      }
+      const bound = bindRect(rect);
+      if (!bound) {
+        return [];
+      }
+
+      const size = Math.max(2, Math.min(16, Math.round(gridSize)));
+      const signature: number[] = [];
+      try {
+        for (let row = 0; row < size; row += 1) {
+          for (let col = 0; col < size; col += 1) {
+            const px = Math.max(0, Math.min(bound.width - 1, Math.round(((col + 0.5) / size) * bound.width)));
+            const py = Math.max(0, Math.min(bound.height - 1, Math.round(((row + 0.5) / size) * bound.height)));
+            const rawPixel = alt.bindGetPixel(bound.id, px, py);
+            signature.push(unpackAverageBrightness(rawPixel));
+          }
+        }
+      } finally {
+        alt.clearBinds?.();
+      }
+
+      return signature;
     }
   };
 }

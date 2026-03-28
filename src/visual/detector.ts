@@ -16,6 +16,7 @@ export interface PixelSource {
     rect: NormalizedRect,
     probe: BrightnessProbeDefinition
   ): { average: number; hits: number; total: number };
+  readSignature(rect: NormalizedRect, gridSize: number): number[];
 }
 
 export interface VisualRegionResult {

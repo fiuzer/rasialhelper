@@ -5,6 +5,7 @@ export interface TrackerRegionDefinition {
   titleKey: string;
   descriptionKey: string;
   trackerIds: string[];
+  slotAssignments?: string[];
   defaultRect: NormalizedRect;
   probes: VisualProbeDefinition[];
   parser?: "free-text" | "slot-bar";
@@ -53,9 +54,19 @@ export const trackerProfiles: TrackerProfileDefinition[] = [
         titleKey: "tracker.regions.buffBar.title",
         descriptionKey: "tracker.regions.buffBar.description",
         trackerIds: ["living_death", "bloat", "split_soul", "overload_active"],
+        slotAssignments: [
+          "residual_souls",
+          "necrosis_stacks",
+          "living_death",
+          "split_soul",
+          "overload_active",
+          "ghost_timer",
+          "skeleton_timer",
+          "zombie_timer"
+        ],
         defaultRect: { x: 0.03, y: 0.02, w: 0.28, h: 0.08 },
         probes: [
-          { kind: "text", anchorX: 0.1, anchorY: 0.55, fontName: "chat", allowGap: true }
+          { kind: "text", anchorX: 0.5, anchorY: 0.78, fontName: "chatmono", allowGap: true }
         ],
         parser: "slot-bar",
         slotCount: 8

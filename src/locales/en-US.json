@@ -228,7 +228,10 @@
     "trackerProfileApplied": "Tracker profile applied",
     "trackerScanComplete": "Tracker scan completed",
     "trackerScanEmpty": "Tracker scan found no strong matches",
-    "trackerReset": "Tracker calibration reset"
+    "trackerReset": "Tracker calibration reset",
+    "trackerTemplatesCaptured": "Tracker icon templates captured",
+    "trackerTemplatesReset": "Tracker icon templates cleared",
+    "trackerTemplatesFailed": "Could not capture tracker icon templates"
   },
   "visual": {
     "title": "Visual Calibration",
@@ -299,8 +302,12 @@
     "sampleLabel": "Tracker sample for this region",
     "samplePlaceholder": "necrosis 8 residual souls 3 living death 24s",
     "scanRegion": "Scan tracker region",
+    "captureTemplates": "Capture icon templates",
+    "clearTemplates": "Clear icon templates",
+    "templatesSummary": "Icon templates",
     "linkedValues": "Tracked values",
     "lastRead": "Last read",
+    "iconMatches": "Icon matches",
     "kind": "Type",
     "source": "Source",
     "confidence": "Confidence",

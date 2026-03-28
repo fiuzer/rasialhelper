@@ -41,7 +41,8 @@ describe("visual detector", () => {
     const source: PixelSource = {
       isReady: () => true,
       readText: () => "",
-      readBrightness: () => ({ average: 100, hits: 2, total: 2 })
+      readBrightness: () => ({ average: 100, hits: 2, total: 2 }),
+      readSignature: () => []
     };
 
     const report = scanVisualProfile(

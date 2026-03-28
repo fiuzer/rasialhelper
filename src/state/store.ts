@@ -20,6 +20,8 @@ import type { PixelSource } from "../visual/detector";
 import { getTrackerProfile } from "../tracking/profiles";
 import { scanTrackerProfile, type TrackerRegionResult } from "../tracking/detector";
 import type { TrackerValue } from "../tracking/catalog";
+import type { TrackerIconTemplateMap } from "../tracking/icon-matcher";
+import { loadTrackerIconTemplates } from "../tracking/template-storage";
 
 export interface DiagnosticEntry {
   timestamp: string;
@@ -44,6 +46,7 @@ export interface AppState {
   trackerSamples: Record<string, string>;
   trackerResults: Record<string, TrackerRegionResult>;
   trackerValues: Record<string, TrackerValue>;
+  trackerIconTemplates: TrackerIconTemplateMap;
 }
 
 function createDefaultVisualSamples(profileId: string): Record<string, string> {
@@ -76,7 +79,8 @@ export function createInitialState(
     trackerRegionOverrides: {},
     trackerSamples: createDefaultTrackerSamples("rasial-standard"),
     trackerResults: {},
-    trackerValues: {}
+    trackerValues: {},
+    trackerIconTemplates: loadTrackerIconTemplates(storage)
   };
 }
 
@@ -357,7 +361,8 @@ export function runTrackerScan(
     state.selectedTrackerProfileId,
     state.settings.gameLanguage,
     state.trackerRegionOverrides,
-    state.trackerSamples
+    state.trackerSamples,
+    state.trackerIconTemplates
   );
 
   return {
@@ -371,6 +376,16 @@ export function runTrackerScan(
       },
       ...state.diagnostics
     ]
+  };
+}
+
+export function setTrackerIconTemplates(
+  state: AppState,
+  templates: TrackerIconTemplateMap
+): AppState {
+  return {
+    ...state,
+    trackerIconTemplates: templates
   };
 }
 

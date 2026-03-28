@@ -151,12 +151,42 @@ The current implementation works through:
 - Alt1 OCR/pixel reads when available
 - sample fallback parsing when you are tuning the layout or testing outside Alt1
 - a first specialized buff-bar slot reader for fixed supported settings
+- a wiki-backed icon catalog for priority Necro and Rasial-related statuses
+- user-captured icon templates for specialized slot matching inside Alt1
 
 Supported automatic mode for the specialized buff reader:
 
 - buff bar size `small`
 - game scale `100%`
 - UI scale `100%`
+
+Priority catalog prepared for specialized matching:
+
+- residual souls
+- necrosis
+- living death
+- split soul
+- overload
+- bloat
+- ghost
+- skeleton
+- zombie
+
+For each of those entries, the tracker catalog now stores:
+
+- RuneScape Wiki article reference
+- icon file hint
+- buff bar category
+- automatic detection strategy
+- default slot hint for the compact Necro layout when applicable
+
+Icon matcher v1 flow:
+
+1. Open the app inside Alt1 with `pixel` permission ready.
+2. Calibrate the `buff-bar` region so it tightly frames the supported icons.
+3. While the priority buffs are visible, use `Capture icon templates`.
+4. Run `Scan all tracker regions`.
+5. Use `Last read` and `Icon matches` in the tracker panel to verify what the app saw.
 
 ### Calibration
 
@@ -200,6 +230,8 @@ Settings available in the UI:
 - [src/recognition/matcher.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/src/recognition/matcher.ts)
 - [src/state/store.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/src/state/store.ts)
 - [src/integrations/alt1.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/src/integrations/alt1.ts)
+- [src/tracking/catalog.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/src/tracking/catalog.ts)
+- [src/tracking/icon-catalog.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/src/tracking/icon-catalog.ts)
 
 ## Recognition strategy
 
@@ -247,6 +279,7 @@ Current automated coverage includes:
 - readiness report generation
 - visual profile scanning and rect normalization
 - tracker parsing for stacks, timers and toggles
+- tracker catalog consistency
 
 Relevant files:
 
@@ -255,3 +288,4 @@ Relevant files:
 - [tests/setup-validator.test.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/tests/setup-validator.test.ts)
 - [tests/visual-detector.test.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/tests/visual-detector.test.ts)
 - [tests/tracker-detector.test.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/tests/tracker-detector.test.ts)
+- [tests/tracker-catalog.test.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/tests/tracker-catalog.test.ts)

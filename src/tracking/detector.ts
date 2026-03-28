@@ -2,6 +2,7 @@ import type { LanguagePreference, SupportedLanguage } from "../types/languages";
 import { normalizeForMatch } from "../utils/text";
 import { type PixelSource, resolveRect } from "../visual/detector";
 import { trackerDefinitions, type TrackerValue } from "./catalog";
+import { matchSlotAgainstTemplates, valueFromIconMatch, type TrackerIconMatch, type TrackerIconTemplateMap } from "./icon-matcher";
 import { getTrackerProfile, type TrackerRegionDefinition } from "./profiles";
 import type { NormalizedRect } from "../visual/profiles";
 
@@ -9,6 +10,7 @@ export interface TrackerRegionResult {
   regionId: string;
   rawText?: string;
   values: TrackerValue[];
+  iconMatches?: TrackerIconMatch[];
   status: "idle" | "detected" | "uncertain" | "missing";
 }
 
@@ -101,6 +103,80 @@ function detectValue(sample: string, preference: LanguagePreference): TrackerVal
   return result;
 }
 
+function firstNumber(sample: string): number | undefined {
+  const match = sample.match(/(\d{1,3})/);
+  return match?.[1] ? Number(match[1]) : undefined;
+}
+
+function detectMappedSlotValue(sample: string, trackerId: string): TrackerValue | undefined {
+  const definition = trackerDefinitions.find((entry) => entry.id === trackerId);
+  if (!definition) {
+    return undefined;
+  }
+
+  const trimmed = sample.trim();
+  if (!trimmed) {
+    return undefined;
+  }
+
+  const numericValue = firstNumber(trimmed);
+
+  if (definition.kind === "toggle") {
+    return {
+      id: definition.id,
+      kind: definition.kind,
+      active: true,
+      source: "textual",
+      confidence: 0.82,
+      rawMatch: trimmed
+    };
+  }
+
+  if (numericValue === undefined) {
+    return {
+      id: definition.id,
+      kind: definition.kind,
+      active: true,
+      source: "textual",
+      confidence: 0.55,
+      rawMatch: trimmed
+    };
+  }
+
+  return {
+    id: definition.id,
+    kind: definition.kind,
+    active: true,
+    value: numericValue,
+    unit: definition.kind === "stack" ? "stacks" : "seconds",
+    source: "textual",
+    confidence: 0.9,
+    rawMatch: trimmed
+  };
+}
+
+function parseStructuredSlotSamples(sample: string): string[] {
+  const trimmed = sample.trim();
+  if (!trimmed) {
+    return [];
+  }
+
+  const explicitSlots = trimmed
+    .split(/[|,;]/)
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+
+  if (explicitSlots.length > 1) {
+    return explicitSlots;
+  }
+
+  if (/^[\d%\s]+$/.test(trimmed)) {
+    return trimmed.split(/\s+/).filter(Boolean);
+  }
+
+  return [];
+}
+
 function readRegionText(
   source: PixelSource | undefined,
   rect: NormalizedRect,
@@ -134,9 +210,7 @@ function readSlotTexts(
       h: rect.h
     };
     const sample = source.readText(slotRect, textProbe).trim();
-    if (sample) {
-      samples.push(sample);
-    }
+    samples.push(sample);
   }
   return samples;
 }
@@ -146,7 +220,8 @@ export function scanTrackerProfile(
   profileId: string,
   preference: LanguagePreference,
   overrides: Record<string, Partial<NormalizedRect>>,
-  samples: Record<string, string>
+  samples: Record<string, string>,
+  templates: TrackerIconTemplateMap = {}
 ): TrackerScanReport {
   const profile = getTrackerProfile(profileId);
   const values: Record<string, TrackerValue> = {};
@@ -158,15 +233,63 @@ export function scanTrackerProfile(
     let regionValues: TrackerValue[] = [];
 
     if (region.parser === "slot-bar") {
-      const slotSamples = source?.isReady()
-        ? readSlotTexts(source, rect, region)
-        : fallbackText
-            .split(/[|,;]/)
-            .map((entry) => entry.trim())
-            .filter(Boolean);
+      const liveSlotSamples = source?.isReady() ? readSlotTexts(source, rect, region) : [];
+      const slotSamples = liveSlotSamples.length ? liveSlotSamples : parseStructuredSlotSamples(fallbackText);
+      const iconMatches = source?.isReady()
+        ? Array.from({ length: region.slotCount ?? 0 }, (_, index) =>
+            matchSlotAgainstTemplates(source, rect, region.slotCount ?? 0, index, templates)
+          ).filter((match): match is TrackerIconMatch => Boolean(match))
+        : [];
 
-      rawText = slotSamples.join(" | ");
-      regionValues = slotSamples.flatMap((sample) => detectValue(sample, preference));
+      if (slotSamples.some((sample) => sample)) {
+        rawText = slotSamples.map((sample) => sample || "-").join(" | ");
+        regionValues = slotSamples.flatMap((sample, index) => {
+          const iconMappedTrackerId = iconMatches.find((match) => match.slotIndex === index)?.trackerId;
+          const mappedTrackerId =
+            iconMappedTrackerId ?? region.slotAssignments?.[index] ?? region.trackerIds[index];
+          const mappedValue = mappedTrackerId
+            ? detectMappedSlotValue(sample, mappedTrackerId)
+            : undefined;
+          return mappedValue ? [mappedValue] : [];
+        });
+      } else {
+        rawText = fallbackText;
+        regionValues = rawText ? detectValue(rawText, preference) : [];
+      }
+
+      for (const match of iconMatches) {
+        if (!regionValues.some((value) => value.id === match.trackerId)) {
+          const iconValue = valueFromIconMatch(match);
+          if (iconValue) {
+            regionValues.push(iconValue);
+          }
+        }
+      }
+
+      for (const match of iconMatches) {
+        values[match.trackerId] = values[match.trackerId] ?? valueFromIconMatch(match)!;
+      }
+
+      for (const value of regionValues) {
+        values[value.id] = value;
+      }
+
+      const status: TrackerRegionResult["status"] =
+        regionValues.some((value) => value.confidence >= 0.9)
+          ? "detected"
+          : regionValues.length || iconMatches.length
+            ? "uncertain"
+            : rawText
+              ? "uncertain"
+              : "missing";
+
+      return {
+        regionId: region.id,
+        rawText: rawText || undefined,
+        values: regionValues,
+        iconMatches: iconMatches.length ? iconMatches : undefined,
+        status
+      };
     } else {
       if (!rawText && source?.isReady()) {
         rawText = readRegionText(source, rect, region);
@@ -191,6 +314,7 @@ export function scanTrackerProfile(
       regionId: region.id,
       rawText: rawText || undefined,
       values: regionValues,
+      iconMatches: undefined,
       status
     };
   });

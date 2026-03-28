@@ -228,7 +228,10 @@
     "trackerProfileApplied": "Perfil do tracker aplicado",
     "trackerScanComplete": "Varredura do tracker concluída",
     "trackerScanEmpty": "A varredura do tracker não encontrou correspondências fortes",
-    "trackerReset": "Calibração do tracker resetada"
+    "trackerReset": "Calibração do tracker resetada",
+    "trackerTemplatesCaptured": "Templates de ícone do tracker capturados",
+    "trackerTemplatesReset": "Templates de ícone do tracker limpos",
+    "trackerTemplatesFailed": "Não foi possível capturar templates de ícone do tracker"
   },
   "visual": {
     "title": "Calibração Visual",
@@ -299,8 +302,12 @@
     "sampleLabel": "Amostra do tracker desta região",
     "samplePlaceholder": "necrosis 8 almas 3 morte viva 24s",
     "scanRegion": "Escanear região do tracker",
+    "captureTemplates": "Capturar templates de ícone",
+    "clearTemplates": "Limpar templates de ícone",
+    "templatesSummary": "Templates de ícone",
     "linkedValues": "Valores acompanhados",
     "lastRead": "Última leitura",
+    "iconMatches": "Correspondências de ícone",
     "kind": "Tipo",
     "source": "Fonte",
     "confidence": "Confiança",

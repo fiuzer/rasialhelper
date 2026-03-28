@@ -11,7 +11,9 @@ import type { RegionKey } from "./recognition/profiles";
 import { setupPresets } from "./setup/catalog";
 import { cycleSetupConfidence, getPresetItems } from "./setup/validator";
 import { trackerDefinitions } from "./tracking/catalog";
+import { captureIconTemplate } from "./tracking/icon-matcher";
 import { getTrackerProfile } from "./tracking/profiles";
+import { clearTrackerIconTemplates, saveTrackerIconTemplates } from "./tracking/template-storage";
 import {
   advanceTimeline,
   analyzeSetup,
@@ -27,6 +29,7 @@ import {
   selectPreset,
   selectTrackerProfile,
   selectVisualProfile,
+  setTrackerIconTemplates,
   updateSettings,
   updateSetupItem,
   updateTrackerRegionOverride,
@@ -36,6 +39,7 @@ import {
   type AppState
 } from "./state/store";
 import type { LanguagePreference } from "./types/languages";
+import { resolveRect } from "./visual/detector";
 import { getVisualProfile } from "./visual/profiles";
 
 function optionMarkup(value: string, label: string, selected: string): string {
@@ -98,6 +102,12 @@ function describeDiagnostic(i18n: I18n, message: string): string {
       return i18n.t("diagnostics.trackerScanEmpty");
     case "tracker-reset":
       return i18n.t("diagnostics.trackerReset");
+    case "tracker-templates-captured":
+      return i18n.t("diagnostics.trackerTemplatesCaptured");
+    case "tracker-templates-reset":
+      return i18n.t("diagnostics.trackerTemplatesReset");
+    case "tracker-templates-failed":
+      return i18n.t("diagnostics.trackerTemplatesFailed");
     default:
       return message;
   }
@@ -150,6 +160,16 @@ function renderTrackerMini(state: AppState, i18n: I18n): string {
       `;
     })
     .join("");
+}
+
+function renderTrackedValueList(region: (typeof getTrackerProfile extends (...args: any[]) => infer R ? R : never)["regions"][number], i18n: I18n): string {
+  const ids = region.slotAssignments?.length ? region.slotAssignments : region.trackerIds;
+  return ids
+    .map((id) => {
+      const definition = trackerDefinitions.find((entry) => entry.id === id);
+      return definition ? i18n.t(definition.shortKey) : id;
+    })
+    .join(" | ");
 }
 
 function renderVisualAdvanced(state: AppState, i18n: I18n): string {
@@ -214,6 +234,21 @@ function renderTrackerAdvanced(state: AppState, i18n: I18n): string {
             <label>W<input data-tracker-rect-input="${region.id}:w" type="number" min="2" max="100" step="1" value="${Math.round(rect.w * 100)}" /></label>
             <label>H<input data-tracker-rect-input="${region.id}:h" type="number" min="2" max="100" step="1" value="${Math.round(rect.h * 100)}" /></label>
           </div>
+          <div class="summary-line">
+            <span>${i18n.t("tracker.linkedValues")}: ${renderTrackedValueList(region, i18n)}</span>
+          </div>
+          ${
+            result?.rawText
+              ? `<div class="summary-line"><span>${i18n.t("tracker.lastRead")}: ${result.rawText}</span></div>`
+              : ""
+          }
+          ${
+            result?.iconMatches?.length
+              ? `<div class="summary-line"><span>${i18n.t("tracker.iconMatches")}: ${result.iconMatches
+                  .map((match) => `${trackerDefinitions.find((entry) => entry.id === match.trackerId)?.id ?? match.trackerId}@${match.slotIndex + 1} (${Math.round(match.score * 100)}%)`)
+                  .join(" | ")}</span></div>`
+              : ""
+          }
           <textarea data-tracker-sample="${region.id}" placeholder="${i18n.t("tracker.samplePlaceholder")}">${
             state.trackerSamples[region.id] ?? ""
           }</textarea>
@@ -256,11 +291,14 @@ function render(state: AppState, root: HTMLElement): void {
               <h2>${i18n.t("tracker.title")}</h2>
               <div class="row">
                 <button id="scan-tracker-profile">${i18n.t("tracker.scanAll")}</button>
+                <button id="capture-tracker-templates">${i18n.t("tracker.captureTemplates")}</button>
+                <button id="clear-tracker-templates">${i18n.t("tracker.clearTemplates")}</button>
                 <button id="reset-tracker-profile">${i18n.t("tracker.reset")}</button>
               </div>
             </div>
             <div class="summary-line">
               <span>${i18n.t(trackerProfile.supportedModeKey)}</span>
+              <span>${i18n.t("tracker.templatesSummary")}: ${Object.keys(state.trackerIconTemplates).length}</span>
             </div>
             <div class="metric-grid">
               ${renderTrackerMini(state, i18n)}
@@ -431,10 +469,29 @@ function render(state: AppState, root: HTMLElement): void {
   const trackerProfileSelect = root.querySelector<HTMLSelectElement>("#tracker-profile-select");
   const applyTrackerProfileButton = root.querySelector<HTMLButtonElement>("#apply-tracker-profile");
   const scanTrackerProfileButton = root.querySelector<HTMLButtonElement>("#scan-tracker-profile");
+  const captureTrackerTemplatesButton = root.querySelector<HTMLButtonElement>("#capture-tracker-templates");
+  const clearTrackerTemplatesButton = root.querySelector<HTMLButtonElement>("#clear-tracker-templates");
   const resetTrackerProfileButton = root.querySelector<HTMLButtonElement>("#reset-tracker-profile");
   const trackerSampleInputs = root.querySelectorAll<HTMLTextAreaElement>("[data-tracker-sample]");
   const trackerRectInputs = root.querySelectorAll<HTMLInputElement>("[data-tracker-rect-input]");
   const trackerRegionButtons = root.querySelectorAll<HTMLButtonElement>("[data-tracker-scan]");
+
+  function syncTrackerInputs(): void {
+    trackerSampleInputs.forEach((input) => {
+      const regionId = input.dataset.trackerSample;
+      if (regionId) {
+        state = updateTrackerSample(state, regionId, input.value);
+      }
+    });
+    trackerRectInputs.forEach((input) => {
+      const token = input.dataset.trackerRectInput;
+      if (!token) {
+        return;
+      }
+      const [regionId, field] = token.split(":");
+      state = updateTrackerRegionOverride(state, regionId, { [field]: Number(input.value) / 100 });
+    });
+  }
 
   saveSettingsButton?.addEventListener("click", () => {
     state = updateSettings(
@@ -515,21 +572,71 @@ function render(state: AppState, root: HTMLElement): void {
   });
 
   scanTrackerProfileButton?.addEventListener("click", () => {
-    trackerSampleInputs.forEach((input) => {
-      const regionId = input.dataset.trackerSample;
-      if (regionId) {
-        state = updateTrackerSample(state, regionId, input.value);
-      }
-    });
-    trackerRectInputs.forEach((input) => {
-      const token = input.dataset.trackerRectInput;
-      if (!token) {
-        return;
-      }
-      const [regionId, field] = token.split(":");
-      state = updateTrackerRegionOverride(state, regionId, { [field]: Number(input.value) / 100 });
-    });
+    syncTrackerInputs();
     state = runTrackerScan(state, createAlt1PixelSource());
+    render(state, root);
+  });
+
+  captureTrackerTemplatesButton?.addEventListener("click", () => {
+    syncTrackerInputs();
+    const source = createAlt1PixelSource();
+    const profile = getTrackerProfile(state.selectedTrackerProfileId);
+    const buffRegion = profile.regions.find((region) => region.id === "buff-bar");
+    if (!buffRegion || !source?.isReady()) {
+      state = {
+        ...state,
+        diagnostics: [
+          { timestamp: new Date().toISOString(), message: "tracker-templates-failed" },
+          ...state.diagnostics
+        ]
+      };
+      render(state, root);
+      return;
+    }
+
+    const rect = resolveRect(buffRegion.defaultRect, state.trackerRegionOverrides[buffRegion.id]);
+    const nextTemplates = { ...state.trackerIconTemplates };
+    for (const definition of trackerDefinitions) {
+      const defaultSlot = definition.wiki.defaultBarSlot;
+      if (!defaultSlot) {
+        continue;
+      }
+      const template = captureIconTemplate(
+        source,
+        buffRegion.id,
+        rect,
+        buffRegion.slotCount ?? 1,
+        defaultSlot - 1,
+        definition.id
+      );
+      if (template) {
+        nextTemplates[definition.id] = template;
+      }
+    }
+
+    saveTrackerIconTemplates(window.localStorage, nextTemplates);
+    state = {
+      ...setTrackerIconTemplates(state, nextTemplates),
+      diagnostics: [
+        {
+          timestamp: new Date().toISOString(),
+          message: Object.keys(nextTemplates).length ? "tracker-templates-captured" : "tracker-templates-failed"
+        },
+        ...state.diagnostics
+      ]
+    };
+    render(state, root);
+  });
+
+  clearTrackerTemplatesButton?.addEventListener("click", () => {
+    clearTrackerIconTemplates(window.localStorage);
+    state = {
+      ...setTrackerIconTemplates(state, {}),
+      diagnostics: [
+        { timestamp: new Date().toISOString(), message: "tracker-templates-reset" },
+        ...state.diagnostics
+      ]
+    };
     render(state, root);
   });
 
@@ -544,20 +651,7 @@ function render(state: AppState, root: HTMLElement): void {
       if (!targetRegionId) {
         return;
       }
-      trackerSampleInputs.forEach((input) => {
-        const regionId = input.dataset.trackerSample;
-        if (regionId) {
-          state = updateTrackerSample(state, regionId, input.value);
-        }
-      });
-      trackerRectInputs.forEach((input) => {
-        const token = input.dataset.trackerRectInput;
-        if (!token) {
-          return;
-        }
-        const [regionId, field] = token.split(":");
-        state = updateTrackerRegionOverride(state, regionId, { [field]: Number(input.value) / 100 });
-      });
+      syncTrackerInputs();
       const fullScan = runTrackerScan(state, createAlt1PixelSource());
       state = {
         ...fullScan,
