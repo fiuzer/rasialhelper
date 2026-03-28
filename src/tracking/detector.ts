@@ -2,7 +2,7 @@ import type { LanguagePreference, SupportedLanguage } from "../types/languages";
 import { normalizeForMatch } from "../utils/text";
 import { type PixelSource, resolveRect } from "../visual/detector";
 import { trackerDefinitions, type TrackerValue } from "./catalog";
-import { getTrackerProfile } from "./profiles";
+import { getTrackerProfile, type TrackerRegionDefinition } from "./profiles";
 import type { NormalizedRect } from "../visual/profiles";
 
 export interface TrackerRegionResult {
@@ -101,6 +101,46 @@ function detectValue(sample: string, preference: LanguagePreference): TrackerVal
   return result;
 }
 
+function readRegionText(
+  source: PixelSource | undefined,
+  rect: NormalizedRect,
+  region: TrackerRegionDefinition
+): string {
+  const textProbe = region.probes.find((probe) => probe.kind === "text");
+  if (!source?.isReady() || textProbe?.kind !== "text") {
+    return "";
+  }
+  return source.readText(rect, textProbe).trim();
+}
+
+function readSlotTexts(
+  source: PixelSource | undefined,
+  rect: NormalizedRect,
+  region: TrackerRegionDefinition
+): string[] {
+  const textProbe = region.probes.find((probe) => probe.kind === "text");
+  if (!source?.isReady() || textProbe?.kind !== "text") {
+    return [];
+  }
+
+  const slotCount = Math.max(1, region.slotCount ?? 1);
+  const slotWidth = rect.w / slotCount;
+  const samples: string[] = [];
+  for (let index = 0; index < slotCount; index += 1) {
+    const slotRect: NormalizedRect = {
+      x: rect.x + slotWidth * index,
+      y: rect.y,
+      w: slotWidth,
+      h: rect.h
+    };
+    const sample = source.readText(slotRect, textProbe).trim();
+    if (sample) {
+      samples.push(sample);
+    }
+  }
+  return samples;
+}
+
 export function scanTrackerProfile(
   source: PixelSource | undefined,
   profileId: string,
@@ -113,16 +153,27 @@ export function scanTrackerProfile(
 
   const regions = profile.regions.map((region) => {
     const rect = resolveRect(region.defaultRect, overrides[region.id]);
-    let rawText = samples[region.id]?.trim() ?? "";
+    const fallbackText = samples[region.id]?.trim() ?? "";
+    let rawText = fallbackText;
+    let regionValues: TrackerValue[] = [];
 
-    if (!rawText && source?.isReady()) {
-      const textProbe = region.probes.find((probe) => probe.kind === "text");
-      if (textProbe?.kind === "text") {
-        rawText = source.readText(rect, textProbe).trim();
+    if (region.parser === "slot-bar") {
+      const slotSamples = source?.isReady()
+        ? readSlotTexts(source, rect, region)
+        : fallbackText
+            .split(/[|,;]/)
+            .map((entry) => entry.trim())
+            .filter(Boolean);
+
+      rawText = slotSamples.join(" | ");
+      regionValues = slotSamples.flatMap((sample) => detectValue(sample, preference));
+    } else {
+      if (!rawText && source?.isReady()) {
+        rawText = readRegionText(source, rect, region);
       }
+      regionValues = rawText ? detectValue(rawText, preference) : [];
     }
 
-    const regionValues = rawText ? detectValue(rawText, preference) : [];
     for (const value of regionValues) {
       values[value.id] = value;
     }

@@ -150,6 +150,13 @@ The current implementation works through:
 - region calibration
 - Alt1 OCR/pixel reads when available
 - sample fallback parsing when you are tuning the layout or testing outside Alt1
+- a first specialized buff-bar slot reader for fixed supported settings
+
+Supported automatic mode for the specialized buff reader:
+
+- buff bar size `small`
+- game scale `100%`
+- UI scale `100%`
 
 ### Calibration
 

@@ -287,6 +287,7 @@
   "tracker": {
     "title": "Necro Gauge e Buff Tracker",
     "description": "Acompanha stacks, timers de summons e buffs de upkeep focados em Rasial com OCR/amostras assistidos.",
+    "supportedMode": "Modo automático suportado: buff bar small, game scale 100%, UI scale 100%.",
     "profileLabel": "Perfil do tracker",
     "applyProfile": "Aplicar perfil do tracker",
     "scanAll": "Escanear todas as regiões do tracker",

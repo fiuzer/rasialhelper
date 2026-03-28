@@ -230,6 +230,7 @@ function render(state: AppState, root: HTMLElement): void {
   const setupReport = getSetupReport(state);
   const alt1Mode = isAlt1Available();
   const pixelReady = isPixelAccessReady();
+  const trackerProfile = getTrackerProfile(state.selectedTrackerProfileId);
 
   root.innerHTML = `
     <main class="shell shell-simple">
@@ -257,6 +258,9 @@ function render(state: AppState, root: HTMLElement): void {
                 <button id="scan-tracker-profile">${i18n.t("tracker.scanAll")}</button>
                 <button id="reset-tracker-profile">${i18n.t("tracker.reset")}</button>
               </div>
+            </div>
+            <div class="summary-line">
+              <span>${i18n.t(trackerProfile.supportedModeKey)}</span>
             </div>
             <div class="metric-grid">
               ${renderTrackerMini(state, i18n)}
