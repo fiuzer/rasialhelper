@@ -220,7 +220,173 @@
     "presetApplied": "Preset applied",
     "setupAnalyzed": "Setup sample analyzed",
     "setupNoMatch": "Setup sample did not match known aliases",
-    "setupCleared": "Setup states cleared"
+    "setupCleared": "Setup states cleared",
+    "visualProfileApplied": "Visual profile applied",
+    "visualScanComplete": "Visual scan completed",
+    "visualScanEmpty": "Visual scan found no strong matches",
+    "visualReset": "Visual calibration reset",
+    "trackerProfileApplied": "Tracker profile applied",
+    "trackerScanComplete": "Tracker scan completed",
+    "trackerScanEmpty": "Tracker scan found no strong matches",
+    "trackerReset": "Tracker calibration reset"
+  },
+  "visual": {
+    "title": "Visual Calibration",
+    "description": "Define screen regions, test OCR or brightness probes and apply assisted visual evidence to your setup checklist.",
+    "profileLabel": "Visual profile",
+    "applyProfile": "Apply profile",
+    "scanAll": "Scan all regions",
+    "reset": "Reset visual calibration",
+    "activeProfile": "Active profile",
+    "fallbackMode": "Detection mode",
+    "liveMode": "Live Alt1 pixel scan",
+    "sampleMode": "Browser sample fallback",
+    "pixelReady": "Pixel permission ready",
+    "pixelNotReady": "Pixel permission not ready",
+    "sampleLabel": "Fallback sample for this region",
+    "samplePlaceholder": "Paste OCR text or notes from this region",
+    "scanRegion": "Scan region",
+    "linkedItems": "Linked setup items",
+    "lastRead": "Last read",
+    "regionConfidence": "Region confidence",
+    "regionStatus": {
+      "idle": "Idle",
+      "detected": "Detected",
+      "uncertain": "Uncertain",
+      "missing": "No match"
+    },
+    "profiles": {
+      "standard16x9": {
+        "title": "Standard 16:9",
+        "description": "Balanced default profile for common desktop layouts."
+      },
+      "compactUi": {
+        "title": "Compact UI",
+        "description": "Tighter region layout for compact or denser interface arrangements."
+      }
+    },
+    "regions": {
+      "buffRibbon": {
+        "title": "Buff ribbon",
+        "description": "Top-left status strip for long-duration buffs and support effects."
+      },
+      "survivalTray": {
+        "title": "Survival tray",
+        "description": "Bottom-right defensive area for healing, prayers and panic tools."
+      },
+      "familiarPanel": {
+        "title": "Familiar panel",
+        "description": "Region for familiar or summon support status."
+      },
+      "gearStatus": {
+        "title": "Gear status",
+        "description": "Small maintenance area for charge or readiness related text."
+      }
+    }
+  },
+  "tracker": {
+    "title": "Necro Gauge and Buff Tracker",
+    "description": "Track Rasial-focused stacks, summon timers and upkeep buffs with assisted OCR/sample parsing.",
+    "profileLabel": "Tracker profile",
+    "applyProfile": "Apply tracker profile",
+    "scanAll": "Scan all tracker regions",
+    "reset": "Reset tracker calibration",
+    "activeProfile": "Active tracker profile",
+    "mode": "Tracker mode",
+    "liveMode": "Live Alt1 OCR/pixel mode",
+    "sampleMode": "Sample parsing mode",
+    "sampleLabel": "Tracker sample for this region",
+    "samplePlaceholder": "necrosis 8 residual souls 3 living death 24s",
+    "scanRegion": "Scan tracker region",
+    "linkedValues": "Tracked values",
+    "lastRead": "Last read",
+    "kind": "Type",
+    "source": "Source",
+    "confidence": "Confidence",
+    "active": "Active",
+    "inactive": "Inactive",
+    "kindNames": {
+      "stack": "Stacks",
+      "timer": "Timer",
+      "toggle": "Toggle"
+    },
+    "sourceNames": {
+      "textual": "Textual",
+      "sample": "Sample"
+    },
+    "regionStatus": {
+      "idle": "Idle",
+      "detected": "Detected",
+      "uncertain": "Uncertain",
+      "missing": "No match"
+    },
+    "profiles": {
+      "rasialStandard": {
+        "title": "Rasial standard",
+        "description": "Compact tracker profile for common Rasial helper layouts."
+      }
+    },
+    "regions": {
+      "necroGauge": {
+        "title": "Necro gauge",
+        "description": "Region for necrosis and residual soul stack readouts."
+      },
+      "summonBar": {
+        "title": "Summon bar",
+        "description": "Region for conjure or summon timers."
+      },
+      "buffBar": {
+        "title": "Buff bar",
+        "description": "Region for timed buffs and upkeep effects."
+      }
+    },
+    "items": {
+      "necrosis": {
+        "title": "Necrosis stacks",
+        "short": "Necrosis",
+        "description": "Tracks necrosis stack count when visible or typed in the sample."
+      },
+      "residualSouls": {
+        "title": "Residual souls",
+        "short": "Souls",
+        "description": "Tracks residual soul stacks for burst planning."
+      },
+      "livingDeath": {
+        "title": "Living Death",
+        "short": "LD",
+        "description": "Tracks whether Living Death is active and its remaining time when readable."
+      },
+      "bloat": {
+        "title": "Bloat",
+        "short": "Bloat",
+        "description": "Tracks Bloat uptime when its timer appears in samples or OCR."
+      },
+      "ghost": {
+        "title": "Vengeful Ghost",
+        "short": "Ghost",
+        "description": "Tracks ghost summon duration."
+      },
+      "skeleton": {
+        "title": "Skeleton",
+        "short": "Skeleton",
+        "description": "Tracks skeleton summon duration."
+      },
+      "zombie": {
+        "title": "Zombie",
+        "short": "Zombie",
+        "description": "Tracks zombie summon duration."
+      },
+      "splitSoul": {
+        "title": "Split Soul",
+        "short": "Split Soul",
+        "description": "Tracks Split Soul style upkeep when visible."
+      },
+      "overload": {
+        "title": "Overload",
+        "short": "Overload",
+        "description": "Tracks whether your main potion upkeep appears active."
+      }
+    }
   },
   "help": {
     "title": "Help",

@@ -220,7 +220,173 @@
     "presetApplied": "Preset aplicado",
     "setupAnalyzed": "Amostra de setup analisada",
     "setupNoMatch": "A amostra de setup não correspondeu aos aliases conhecidos",
-    "setupCleared": "Estados do setup limpos"
+    "setupCleared": "Estados do setup limpos",
+    "visualProfileApplied": "Perfil visual aplicado",
+    "visualScanComplete": "Varredura visual concluída",
+    "visualScanEmpty": "A varredura visual não encontrou correspondências fortes",
+    "visualReset": "Calibração visual resetada",
+    "trackerProfileApplied": "Perfil do tracker aplicado",
+    "trackerScanComplete": "Varredura do tracker concluída",
+    "trackerScanEmpty": "A varredura do tracker não encontrou correspondências fortes",
+    "trackerReset": "Calibração do tracker resetada"
+  },
+  "visual": {
+    "title": "Calibração Visual",
+    "description": "Defina regiões da tela, teste OCR ou sondas de brilho e aplique evidências visuais assistidas à sua checklist de setup.",
+    "profileLabel": "Perfil visual",
+    "applyProfile": "Aplicar perfil",
+    "scanAll": "Escanear todas as regiões",
+    "reset": "Resetar calibração visual",
+    "activeProfile": "Perfil ativo",
+    "fallbackMode": "Modo de detecção",
+    "liveMode": "Leitura ao vivo por pixels do Alt1",
+    "sampleMode": "Fallback por amostra no navegador",
+    "pixelReady": "Permissão de pixel pronta",
+    "pixelNotReady": "Permissão de pixel não pronta",
+    "sampleLabel": "Amostra de fallback desta região",
+    "samplePlaceholder": "Cole OCR ou anotações desta região",
+    "scanRegion": "Escanear região",
+    "linkedItems": "Itens de setup ligados",
+    "lastRead": "Última leitura",
+    "regionConfidence": "Confiança da região",
+    "regionStatus": {
+      "idle": "Parado",
+      "detected": "Detectado",
+      "uncertain": "Incerto",
+      "missing": "Sem correspondência"
+    },
+    "profiles": {
+      "standard16x9": {
+        "title": "Padrão 16:9",
+        "description": "Perfil balanceado para layouts comuns de desktop."
+      },
+      "compactUi": {
+        "title": "UI compacta",
+        "description": "Layout de regiões mais apertado para interfaces compactas ou densas."
+      }
+    },
+    "regions": {
+      "buffRibbon": {
+        "title": "Faixa de buffs",
+        "description": "Faixa superior esquerda para buffs longos e efeitos de suporte."
+      },
+      "survivalTray": {
+        "title": "Bandeja de sobrevivência",
+        "description": "Área inferior direita para cura, orações e ferramentas de emergência."
+      },
+      "familiarPanel": {
+        "title": "Painel do familiar",
+        "description": "Região para o status do familiar ou do suporte de invocação."
+      },
+      "gearStatus": {
+        "title": "Status do equipamento",
+        "description": "Área pequena de manutenção para texto de cargas ou prontidão."
+      }
+    }
+  },
+  "tracker": {
+    "title": "Necro Gauge e Buff Tracker",
+    "description": "Acompanha stacks, timers de summons e buffs de upkeep focados em Rasial com OCR/amostras assistidos.",
+    "profileLabel": "Perfil do tracker",
+    "applyProfile": "Aplicar perfil do tracker",
+    "scanAll": "Escanear todas as regiões do tracker",
+    "reset": "Resetar calibração do tracker",
+    "activeProfile": "Perfil ativo do tracker",
+    "mode": "Modo do tracker",
+    "liveMode": "Modo ao vivo com OCR/pixel do Alt1",
+    "sampleMode": "Modo por amostra",
+    "sampleLabel": "Amostra do tracker desta região",
+    "samplePlaceholder": "necrosis 8 almas 3 morte viva 24s",
+    "scanRegion": "Escanear região do tracker",
+    "linkedValues": "Valores acompanhados",
+    "lastRead": "Última leitura",
+    "kind": "Tipo",
+    "source": "Fonte",
+    "confidence": "Confiança",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "kindNames": {
+      "stack": "Stacks",
+      "timer": "Timer",
+      "toggle": "Alternância"
+    },
+    "sourceNames": {
+      "textual": "Texto",
+      "sample": "Amostra"
+    },
+    "regionStatus": {
+      "idle": "Parado",
+      "detected": "Detectado",
+      "uncertain": "Incerto",
+      "missing": "Sem correspondência"
+    },
+    "profiles": {
+      "rasialStandard": {
+        "title": "Rasial padrão",
+        "description": "Perfil compacto de tracker para layouts comuns do helper de Rasial."
+      }
+    },
+    "regions": {
+      "necroGauge": {
+        "title": "Gauge de necro",
+        "description": "Região para leitura de stacks de necrosis e almas residuais."
+      },
+      "summonBar": {
+        "title": "Barra de summons",
+        "description": "Região para timers de conjures ou summons."
+      },
+      "buffBar": {
+        "title": "Barra de buffs",
+        "description": "Região para buffs temporários e efeitos de upkeep."
+      }
+    },
+    "items": {
+      "necrosis": {
+        "title": "Stacks de Necrosis",
+        "short": "Necrosis",
+        "description": "Acompanha a quantidade de stacks de Necrosis quando visível ou digitada na amostra."
+      },
+      "residualSouls": {
+        "title": "Almas residuais",
+        "short": "Almas",
+        "description": "Acompanha stacks de almas residuais para janelas de burst."
+      },
+      "livingDeath": {
+        "title": "Morte Viva",
+        "short": "MV",
+        "description": "Acompanha se Morte Viva está ativa e seu tempo restante quando legível."
+      },
+      "bloat": {
+        "title": "Bloat",
+        "short": "Bloat",
+        "description": "Acompanha o uptime de Bloat quando seu timer aparece nas amostras ou no OCR."
+      },
+      "ghost": {
+        "title": "Fantasma Vingativo",
+        "short": "Fantasma",
+        "description": "Acompanha a duração do fantasma."
+      },
+      "skeleton": {
+        "title": "Esqueleto",
+        "short": "Esqueleto",
+        "description": "Acompanha a duração do esqueleto."
+      },
+      "zombie": {
+        "title": "Zumbi",
+        "short": "Zumbi",
+        "description": "Acompanha a duração do zumbi."
+      },
+      "splitSoul": {
+        "title": "Alma Dividida",
+        "short": "Alma Dividida",
+        "description": "Acompanha upkeep no estilo Alma Dividida quando visível."
+      },
+      "overload": {
+        "title": "Overload",
+        "short": "Overload",
+        "description": "Acompanha se o buff principal de poção parece ativo."
+      }
+    }
   },
   "help": {
     "title": "Ajuda",

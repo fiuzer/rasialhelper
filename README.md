@@ -7,6 +7,8 @@ Safe companion app for Alt1 focused on bilingual setup validation, calibration, 
 - Validates your pre-fight setup against study presets
 - Highlights required, recommended and optional preparation items
 - Lets you confirm setup items manually or by assisted sample matching
+- Adds visual calibration profiles with region-based OCR and brightness probes for Alt1
+- Adds a Rasial-focused necro gauge and buff tracker with sample/OCR parsing
 - Supports `pt-BR` and `en-US` independently for app language and game language
 - Provides calibration for lightweight text matching
 - Shows a study coach timeline and overlay preview
@@ -116,6 +118,39 @@ The validator is intentionally didactic:
 - it separates required and recommended items
 - it makes confidence visible instead of pretending uncertain detections are correct
 
+### Visual Calibration
+
+The helper now includes visual profiles with normalized regions that can be scanned in Alt1 when `pixel` permission is available.
+
+Each region can:
+
+- read lightweight OCR text from a calibrated anchor point
+- sample brightness from a few points as weak visual evidence
+- apply `detected` or `uncertain` updates to linked setup items
+- fall back to browser sample text when Alt1 pixel access is not available
+
+This keeps the workflow usable during development and while tuning coordinates.
+
+### Necro Gauge and Buff Tracker
+
+The helper also includes a Rasial-focused tracker inspired by rotation and buff helper overlays.
+
+It can track:
+
+- necrosis stacks
+- residual souls
+- living death uptime
+- bloat uptime
+- ghost, skeleton and zombie timers
+- split soul style upkeep
+- overload style upkeep
+
+The current implementation works through:
+
+- region calibration
+- Alt1 OCR/pixel reads when available
+- sample fallback parsing when you are tuning the layout or testing outside Alt1
+
 ### Calibration
 
 Paste sample OCR-like text such as `Phase 2`, `Fase 2`, `Soul volley` or `Rajada de almas`.
@@ -203,9 +238,13 @@ Current automated coverage includes:
 - language-aware matcher behavior
 - setup sample detection
 - readiness report generation
+- visual profile scanning and rect normalization
+- tracker parsing for stacks, timers and toggles
 
 Relevant files:
 
 - [tests/i18n.test.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/tests/i18n.test.ts)
 - [tests/matcher.test.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/tests/matcher.test.ts)
 - [tests/setup-validator.test.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/tests/setup-validator.test.ts)
+- [tests/visual-detector.test.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/tests/visual-detector.test.ts)
+- [tests/tracker-detector.test.ts](/e:/Arquivos-Jogos/backup/Programming/teste-runescape/tests/tracker-detector.test.ts)
